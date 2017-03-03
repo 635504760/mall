@@ -1,0 +1,110 @@
+﻿@{
+    ViewBag.SubTitle = "账户管理";
+    ViewBag.Title = "充值记录";
+}
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">充值记录</h3>
+            </div>
+            <div class="box-body">
+                <table id="joinBusinessRechargeList_tab" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>序号</th>
+                            <th>交易流水号</th>
+                            <th>合作商家名称</th>
+                            <th>合作商家账号</th>
+                            <th>充值积分</th>
+                            <th>充值时间</th>
+                            <th>备注</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    @Scripts.Render("~/AdminLTE/plugins/datatables/js")
+
+    <script type="text/javascript">
+        $(function () {
+            //初始化表格
+            loadJoinBusinessRechargeListData();
+        });
+
+        var joinBusinessRechargeList_tab;
+
+        var loadJoinBusinessRechargeListData = function () {
+            var No = 0;
+            joinBusinessRechargeList_tab = $('#joinBusinessRechargeList_tab').DataTable({
+                "dom": "itflp",
+                "processing": true,
+                "searching": false,
+                "serverSide": true, //启用服务器端分页
+                "bInfo": false,
+                "language": { "url": '@Url.Content("~/AdminLTE/plugins/datatables/language.json")' },
+                "aLengthMenu": [10, 25, 50, 100],
+                //"bAutoWidth": false,
+                "ajax": function (data, callback, settings) {
+                    //封装请求参数
+                    var param = {};
+                    param.pageSize = data.length;//页面显示记录条数，在页面显示每页显示多少项的时候
+                    param.start = data.start;//开始的记录序号
+                    param.pageNum = (data.start / data.length) + 1;//当前页码
+                    //ajax请求数据
+                    $.get('List/' + param.pageNum + '/' + param.pageSize,
+                        function (result) {
+                            console.log(result);
+                            //封装返回数据
+                            var returnData = {};
+                            returnData.draw = data.draw;//这里直接自行返回了draw计数器,应该由后台返回
+                            returnData.recordsTotal = result.TotalCount;//返回数据全部记录
+                            returnData.recordsFiltered = result.TotalCount;//后台不实现过滤功能，每次查询均视作全部结果
+                            returnData.data = result.List;//返回的数据列表
+                            //console.log(returnData);
+                            //调用DataTables提供的callback方法，代表数据已封装完成并传回DataTables进行渲染
+                            //此时的数据需确保正确无误，异常判断应在执行此回调前自行处理完毕
+                            callback(returnData);
+                        });
+                },
+                "columns": [
+                    { data: null },
+                    { data: 'Id' },
+                    { data: 'Name' },
+                    { data: 'Account' },
+                    { data: 'RechargeIntegral' },
+                    { data: 'AddTime' },
+                    { data: 'Remark' }
+                ],
+                "columnDefs": [
+                    {
+                        targets: 0,
+                        data: null,
+                        render: function (data) {
+                            No = No + 1;
+                            return No;
+                        }
+                    },
+                    {
+                        "targets": -2,
+                        "data": null,
+                        "render": function (data) {
+                            var date = eval(data.replace(/\/Date\((\d+)\)\//gi, "new Date($1)"));
+                            return date.format("yyyy-mm-dd HH:MM:ss");
+                        }
+                    }]
+            }).on('preXhr.dt', function (e, settings, data) {
+                No = 0;
+            });
+        };
+
+        var searchJoinBusinessRechargeListData = function () {
+            joinBusinessRechargeList_tab.ajax.reload();
+        }
+    </script>
+}

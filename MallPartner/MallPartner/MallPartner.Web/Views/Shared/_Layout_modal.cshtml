@@ -1,0 +1,29 @@
+﻿@using StMallB.Web.Extensions
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>StMallB.Web</title>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+
+    @Styles.Render("~/AdminLTE/plugins/font-awesome/css")
+    @Styles.Render("~/AdminLTE/plugins/ionicons/css")
+    @Styles.Render("~/AdminLTE/bootstrap/css")
+    @Styles.Render("~/AdminLTE/dist/css")
+    @Styles.Render("~/AdminLTE/dist/css/skins")
+
+</head>
+<body>
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">@ViewBag.Title</h4>
+    </div>
+    <div class="modal-body">
+        @RenderBody()
+    </div>
+    @RenderSection("modalFooter", required: false)
+    <script src="~/Scripts/util.js"></script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

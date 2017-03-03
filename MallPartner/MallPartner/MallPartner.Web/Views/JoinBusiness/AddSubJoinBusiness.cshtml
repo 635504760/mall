@@ -1,0 +1,153 @@
+﻿@{
+    if (ViewBag.isModal == 1)
+    {
+        Layout = "~/Views/Shared/_Layout_modal.cshtml";
+    }
+
+    ViewBag.SubTitle = "下级代理商管理";
+    ViewBag.Title = "开通下级代理商";
+}
+
+@Styles.Render("~/AdminLTE/plugins/select2/css")
+
+<div class="row">
+    <div class="col-md-12">
+        <!-- general form elements -->
+        <div class="box box-primary">
+            @if (@ViewBag.isModal != 1)
+            {
+                <div class="box-header with-border">
+                    <h3 class="box-title">填写下级代理商信息</h3>
+                </div>
+            }
+            <!-- /.box-header -->
+            <!-- form start -->
+            <div class="row">
+                <div id="addSubJoinBusinessContent">
+                    <form role="form" id="addSubJoinBusinessForm">
+                        <div class="box-body">
+                            <div class="form-group row">
+                                <label class="col-sm-5 control-label">下级代理商公司名称</label>
+
+                                <div class="col-sm-7">
+                                    <input type="text" required name="name" class="form-control" placeholder="请输入下级代理商公司名称（必填）">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-5 control-label">下级代理商登录帐号</label>
+
+                                <div class="col-sm-7">
+                                    <input type="text" required name="account" class="form-control" placeholder="下级代理商登录帐号（必填，不能是中文）">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-5 control-label">下级代理商登录密码</label>
+
+                                <div class="col-sm-7">
+                                    <input type="text" required name="password" class="form-control" placeholder="下级代理商登录密码（必填，不能是中文）">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-5 control-label">地区</label>
+
+                                <div class="col-sm-7">
+                                    <span id="span_province"><select id="consignee_province" class="form-control"><option value="">请选择</option></select></span>
+                                    <span id="span_city"><select id="consignee_city" class="form-control"><option value="">请选择</option></select></span>
+                                    <span id="span_county"><select id="consignee_county" class="form-control"><option value="">请选择</option></select></span>
+                                    <input type="text" style="display: none;" class="textbox" maxlength="50" name="regionId" id="regionId" />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-5 control-label">详细地址</label>
+
+                                <div class="col-sm-7">
+                                    <input type="text" name="address" class="form-control" placeholder="请输入详细地址">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-5 control-label">联系人</label>
+
+                                <div class="col-sm-7">
+                                    <input type="text" required name="linkMan" class="form-control" placeholder="请输入联系人（必填）">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-5 control-label">联系电话</label>
+
+                                <div class="col-sm-7">
+                                    <input type="tel" name="linkTel" class="form-control" placeholder="请输入联系电话">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-5 control-label">积分</label>
+
+                                <div class="col-sm-7">
+                                    <input type="number" required min="0.00" step="0.01" name="integral" class="form-control" value="0" placeholder="请输入初始积分">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-5 control-label">商家描述</label>
+
+                                <div class="col-sm-7">
+                                    <textarea name="des" class="form-control" placeholder="请输入商家描述"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.box-body -->
+                        <div class="box-footer">
+                            <button type="submit" data-loading-text="请稍后..." class="btn btn-primary col-sm-offset-5">提交</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- /.box -->
+    </div>
+</div>
+
+
+@section scripts{
+    <script src="~/Scripts/Util/Region.js"></script>
+    <script src="~/Scripts/Util/RegionBind.js"></script>
+    <script>
+        $(function () {
+            var isModal = '@ViewBag.isModal';
+            if (isModal == '1') {
+                $('#addSubJoinBusinessContent').addClass('col-md-10 col-md-offset-1');
+            }
+            else {
+                $('#addSubJoinBusinessContent').addClass('col-md-4 col-md-offset-4');
+            }
+
+            setProvince($('#consignee_province'), $('#consignee_city'), $('#consignee_county'), $('#regionId'));
+
+            $('#addSubJoinBusinessForm').submit(function () {
+                var $form = $(this);
+                var $btn = $form.find('button').button('loading');
+
+                $.post('Create', $form.serialize(), function (data) {
+                    if (data && data.state == 1) {
+                        $btn.html('添加成功');
+                        $form[0].reset();
+                        var isModal = '@ViewBag.isModal';
+                        if (isModal == '1') {
+                            $btn.button('reset');
+                            $('button.close').click();
+                            searchJoinBusinessListData();
+                        }
+                        else {
+                            location.href = 'List';
+                        }
+                    }
+                    else {
+                        alert(data.msg);
+                        $btn.button('reset');
+                    }
+
+                });
+
+                return false;
+            });
+        });
+    </script>
+}

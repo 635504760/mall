@@ -1,0 +1,152 @@
+﻿@{
+    ViewBag.SubTitle = "下级代理商管理";
+    ViewBag.Title = "下级代理商";
+}
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">下级代理商</h3>
+                <div class="box-tools pull-right">
+                    <a class="btn btn-sm btn-primary" data-toggle="modal" data-target="#lgModal"
+                       href="@Url.Action("AddSubJoinBusiness", "JoinBusiness")?isModal=1">开通下级代理商</a>
+                </div>
+            </div>
+            <div class="box-body">
+                <div class="clearfix">
+                    <div class="col-md-4">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                            <input type="text" class="form-control" id="joinBusinessList_keyword" placeholder="搜索">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <button type="button" onclick="searchJoinBusinessListData();" class="btn btn-primary">搜索</button>
+                    </div>
+                </div>
+                <table id="joinBusinessList_tab" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>序号</th>
+                            <th>代理商公司名称</th>
+                            <th>代理商帐号</th>
+                            <th>地区</th>
+                            <th>详细地址</th>
+                            <th>联系人</th>
+                            <th>联系电话</th>
+                            <th>积分余额</th>
+                            <th>添加时间</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    @Scripts.Render("~/AdminLTE/plugins/datatables/js")
+
+    <script src="~/Scripts/Util/Region.js"></script>
+    <script src="~/Scripts/Util/util.js"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            //初始化表格
+            loadJoinBusinessListData();
+        });
+
+        var joinBusinessList_tab;
+
+        var loadJoinBusinessListData = function () {
+            var No = 0;
+            joinBusinessList_tab = $('#joinBusinessList_tab').DataTable({
+                "dom": "itflp",
+                "processing": true,
+                "searching": false,
+                "serverSide": true, //启用服务器端分页
+                "bInfo": false,
+                "language": { "url": '@Url.Content("~/AdminLTE/plugins/datatables/language.json")' },
+                "aLengthMenu": [10, 25, 50, 100],
+                //"bAutoWidth": false,
+                "ajax": function (data, callback, settings) {
+                    //封装请求参数
+                    var param = {};
+                    param.pageSize = data.length;//页面显示记录条数，在页面显示每页显示多少项的时候
+                    param.start = data.start;//开始的记录序号
+                    param.pageNum = (data.start / data.length) + 1;//当前页码
+                    //ajax请求数据
+                    $.get('List/' + param.pageNum + '/' + param.pageSize, {
+                        keyword: $('#joinBusinessList_keyword').val()
+                    }, function (result) {
+                        console.log(result);
+                        //封装返回数据
+                        var returnData = {};
+                        returnData.draw = data.draw;//这里直接自行返回了draw计数器,应该由后台返回
+                        returnData.recordsTotal = result.TotalCount;//返回数据全部记录
+                        returnData.recordsFiltered = result.TotalCount;//后台不实现过滤功能，每次查询均视作全部结果
+                        returnData.data = result.List;//返回的数据列表
+                        //console.log(returnData);
+                        //调用DataTables提供的callback方法，代表数据已封装完成并传回DataTables进行渲染
+                        //此时的数据需确保正确无误，异常判断应在执行此回调前自行处理完毕
+                        callback(returnData);
+                    });
+                },
+                "columns": [
+                    { data: null },
+                    { data: "BusName" },
+                    { data: "BusAccount" },
+                    { data: "BusRegionId" },
+                    { data: "BusAddress" },
+                    { data: "BusLinkMan" },
+                    { data: "BusLinkTel" },
+                    { data: "BusIntegral" },
+                    { data: "BusAddTime" },
+                    { data: null }
+                ],
+                "columnDefs": [
+                    {
+                        targets: 0,
+                        data: null,
+                        render: function (data) {
+                            No = No + 1;
+                            return No;
+                        }
+                    },
+                    {
+                        "targets": 3,
+                        "data": null,
+                        "render": function (data) {
+                            return util.getRegion(data);
+                        }
+                    },
+                    {
+                        "targets": -2,
+                        "data": null,
+                        "render": function (data) {
+                            var date = eval(data.replace(/\/Date\((\d+)\)\//gi, "new Date($1)"));
+                            return date.format("yyyy-mm-dd HH:MM:ss");
+                        }
+                    },
+                    {
+                        "targets": -1,
+                        "data": null,
+                        "render": function (data) {
+                            var btn = '<a class="btn btn-xs btn-primary" data-toggle="modal" data-target="#lgModal" href="Recharge/' + data.BusAccount + '?isModal=1">充值积分</a> &nbsp;'
+                                    + '<a class="btn btn-xs btn-info" href="SubJoinBusinessRechargeList/' + data.BusName + ' ' + data.BusAccount + '">充值记录</a> &nbsp;'
+                                    + '<a class="btn btn-xs btn-danger" data-toggle="modal" data-target="#smModal" href="ResetSubPassword/' + data.BusAccount + '">重置密码</a> &nbsp;';
+                            return btn;
+                        }
+                    }]
+            }).on('preXhr.dt', function (e, settings, data) {
+                No = 0;
+            });
+        };
+
+        var searchJoinBusinessListData = function () {
+            joinBusinessList_tab.ajax.reload();
+        }
+    </script>
+}

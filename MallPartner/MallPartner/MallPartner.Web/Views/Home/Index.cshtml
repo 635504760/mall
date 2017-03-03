@@ -1,0 +1,330 @@
+﻿@{
+    ViewBag.Title = "首页";
+}
+<div class="row">
+    <div class="col-xs-6">
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">用户积分充值记录</h3>
+            </div>
+            <div class="box-body">
+                <table id="MemberIntegralRecordList_tab" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>用户名</th>
+                            <th>充值类型</th>
+                            <th>充值积分</th>
+                            <th>记录时间</th>
+                            <th>备注</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-6">
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">下级代理商充值记录</h3>
+            </div>
+            <div class="box-body">
+                <table id="subJoinBusinessRechargeList_tab" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>交易流水号</th>
+                            <th>合作商家名称</th>
+                            <th>合作商家账号</th>
+                            <th>充值积分</th>
+                            <th>充值时间</th>
+                            <th>备注</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-6">
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">下级代理商</h3>
+                <div class="box-tools pull-right">
+                    <a class="btn btn-sm btn-primary" data-toggle="modal" data-target="#lgModal"
+                       href="@Url.Action("AddSubJoinBusiness", "JoinBusiness")?isModal=1">开通下级代理商</a>
+                </div>
+            </div>
+            <div class="box-body">
+                <table id="joinBusinessList_tab" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>代理商公司名称</th>
+                            <th>代理商帐号</th>
+                            <th>地区</th>
+                            <th>联系人</th>
+                            <th>积分余额</th>
+                            @*<th>操作</th>*@
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-6">
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">充值记录</h3>
+            </div>
+            <div class="box-body">
+                <table id="joinBusinessRechargeList_tab" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>交易流水号</th>
+                            <th>合作商家名称</th>
+                            <th>合作商家账号</th>
+                            <th>充值积分</th>
+                            <th>充值时间</th>
+                            <th>备注</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+    @Scripts.Render("~/AdminLTE/plugins/datatables/js")
+
+    <script src="~/Scripts/Util/Region.js"></script>
+    <script src="~/Scripts/Util/util.js"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            loadMemberIntegralRecordListData();
+            loadJoinBusinessListData();
+            loadSubJoinBusinessRechargeListData();
+            loadJoinBusinessRechargeListData();
+        });
+
+        function loadMemberIntegralRecordListData() {
+            $('#MemberIntegralRecordList_tab').DataTable({
+                "dom": "itflp",
+                "processing": true,
+                "searching": false,
+                "serverSide": true, //启用服务器端分页
+                "bInfo": false,
+                "language": { "url": '@Url.Content("~/AdminLTE/plugins/datatables/language.json")' },
+                "aLengthMenu": [5],
+                //"bAutoWidth": false,
+                "ajax": function (data, callback, settings) {
+                    //封装请求参数
+                    var param = {};
+                    param.pageSize = data.length;//页面显示记录条数，在页面显示每页显示多少项的时候
+                    param.start = data.start;//开始的记录序号
+                    param.pageNum = (data.start / data.length) + 1;//当前页码
+                    //ajax请求数据
+                    $.get('/MemberIntegral/RecordList/' + param.pageNum + '/' + param.pageSize, {
+                        keyword: $('#accountInfoPremise').val()
+                    }, function (result) {
+                        console.log(result);
+                        var returnData = {};
+                        returnData.draw = data.draw;//这里直接自行返回了draw计数器,应该由后台返回
+                        returnData.recordsTotal = result.TotalCount;//返回数据全部记录
+                        returnData.recordsFiltered = result.TotalCount;//后台不实现过滤功能，每次查询均视作全部结果
+                        returnData.data = result.List;//返回的数据列表
+                        callback(returnData);
+                    });
+                },
+                "columns": [
+                    { data: "UserName" },
+                    { data: "TypeId" },
+                    { data: "Integral" },
+                    { data: "RecordDate" },
+                    { data: "ReMark" },
+                ],
+                "columnDefs": [
+                    {
+                        "targets": 1,
+                        "data": null,
+                        "render": function (data) {
+                            return '合作商赠送';
+                        }
+                    },
+                    {
+                        "targets": -2,
+                        "data": null,
+                        "render": function (data) {
+                            var date = eval(data.replace(/\/Date\((\d+)\)\//gi, "new Date($1)"));
+                            return date.format("yyyy-mm-dd HH:MM:ss");
+                        }
+                    }
+                ]
+            });
+        };
+
+        function loadJoinBusinessListData() {
+            $('#joinBusinessList_tab').DataTable({
+                "dom": "itflp",
+                "processing": true,
+                "searching": false,
+                "serverSide": true, //启用服务器端分页
+                "bInfo": false,
+                "language": { "url": '@Url.Content("~/AdminLTE/plugins/datatables/language.json")' },
+                "aLengthMenu": [5],
+                //"bAutoWidth": false,
+                "ajax": function (data, callback, settings) {
+                    //封装请求参数
+                    var param = {};
+                    param.pageSize = data.length;//页面显示记录条数，在页面显示每页显示多少项的时候
+                    param.start = data.start;//开始的记录序号
+                    param.pageNum = (data.start / data.length) + 1;//当前页码
+                    //ajax请求数据
+                    $.get('/JoinBusiness/List/' + param.pageNum + '/' + param.pageSize, {
+                        keyword: ''
+                    }, function (result) {
+                        console.log(result);
+                        //封装返回数据
+                        var returnData = {};
+                        returnData.draw = data.draw;//这里直接自行返回了draw计数器,应该由后台返回
+                        returnData.recordsTotal = result.TotalCount;//返回数据全部记录
+                        returnData.recordsFiltered = result.TotalCount;//后台不实现过滤功能，每次查询均视作全部结果
+                        returnData.data = result.List;//返回的数据列表
+                        callback(returnData);
+                    });
+                },
+                "columns": [
+                    { data: "BusName" },
+                    { data: "BusAccount" },
+                    { data: "BusRegionId" },
+                    { data: "BusLinkMan" },
+                    { data: "BusIntegral" }
+                    //{ data: null }
+                ],
+                "columnDefs": [
+                    {
+                        "targets": 2,
+                        "data": null,
+                        "render": function (data) {
+                            return util.getRegion(data);
+                        }
+                    }
+                    //{
+                    //    "targets": -1,
+                    //    "data": null,
+                    //    "render": function (data) {
+                    //        var btn = '<a class="btn btn-xs btn-primary" data-toggle="modal" data-target="#lgModal" href="Recharge/' + data.BusAccount + '?isModal=1">充值积分</a> &nbsp;'
+                    //                + '<a class="btn btn-xs btn-danger" data-toggle="modal" data-target="#smModal" href="ResetSubPassword/' + data.BusAccount + '">重置密码</a> &nbsp;';
+                    //        return btn;
+                    //    }
+                    //}
+                ]
+            });
+        }
+
+        function loadSubJoinBusinessRechargeListData() {
+            $('#subJoinBusinessRechargeList_tab').DataTable({
+                "dom": "itflp",
+                "processing": true,
+                "searching": false,
+                "serverSide": true, //启用服务器端分页
+                "bInfo": false,
+                "language": { "url": '@Url.Content("~/AdminLTE/plugins/datatables/language.json")' },
+                "aLengthMenu": [5],
+                //"bAutoWidth": false,
+                "ajax": function (data, callback, settings) {
+                    //封装请求参数
+                    var param = {};
+                    param.pageSize = data.length;//页面显示记录条数，在页面显示每页显示多少项的时候
+                    param.start = data.start;//开始的记录序号
+                    param.pageNum = (data.start / data.length) + 1;//当前页码
+                    //ajax请求数据
+                    $.get('/JoinBusiness/SubJoinBusinessRechargeList/' + param.pageNum + '/' + param.pageSize,
+                        function (result) {
+                            console.log(result);
+                            //封装返回数据
+                            var returnData = {};
+                            returnData.draw = data.draw;//这里直接自行返回了draw计数器,应该由后台返回
+                            returnData.recordsTotal = result.TotalCount;//返回数据全部记录
+                            returnData.recordsFiltered = result.TotalCount;//后台不实现过滤功能，每次查询均视作全部结果
+                            returnData.data = result.List;//返回的数据列表
+                            //console.log(returnData);
+                            //调用DataTables提供的callback方法，代表数据已封装完成并传回DataTables进行渲染
+                            //此时的数据需确保正确无误，异常判断应在执行此回调前自行处理完毕
+                            callback(returnData);
+                        });
+                },
+                "columns": [
+                    { data: 'Id' },
+                    { data: 'Name' },
+                    { data: 'Account' },
+                    { data: 'RechargeIntegral' },
+                    { data: 'AddTime' },
+                    { data: 'Remark' }
+                ],
+                "columnDefs": [
+                    {
+                        "targets": -2,
+                        "data": null,
+                        "render": function (data) {
+                            var date = eval(data.replace(/\/Date\((\d+)\)\//gi, "new Date($1)"));
+                            return date.format("yyyy-mm-dd HH:MM:ss");
+                        }
+                    }]
+            });
+        }
+
+        function loadJoinBusinessRechargeListData() {
+            $('#joinBusinessRechargeList_tab').DataTable({
+                "dom": "itflp",
+                "processing": true,
+                "searching": false,
+                "serverSide": true, //启用服务器端分页
+                "bInfo": false,
+                "language": { "url": '@Url.Content("~/AdminLTE/plugins/datatables/language.json")' },
+                "aLengthMenu": [5],
+                //"bAutoWidth": false,
+                "ajax": function (data, callback, settings) {
+                    //封装请求参数
+                    var param = {};
+                    param.pageSize = data.length;//页面显示记录条数，在页面显示每页显示多少项的时候
+                    param.start = data.start;//开始的记录序号
+                    param.pageNum = (data.start / data.length) + 1;//当前页码
+                    //ajax请求数据
+                    $.get('BusRecord/List/' + param.pageNum + '/' + param.pageSize,
+                        function (result) {
+                            console.log(result);
+                            //封装返回数据
+                            var returnData = {};
+                            returnData.draw = data.draw;//这里直接自行返回了draw计数器,应该由后台返回
+                            returnData.recordsTotal = result.TotalCount;//返回数据全部记录
+                            returnData.recordsFiltered = result.TotalCount;//后台不实现过滤功能，每次查询均视作全部结果
+                            returnData.data = result.List;//返回的数据列表
+                            //console.log(returnData);
+                            //调用DataTables提供的callback方法，代表数据已封装完成并传回DataTables进行渲染
+                            //此时的数据需确保正确无误，异常判断应在执行此回调前自行处理完毕
+                            callback(returnData);
+                        });
+                },
+                "columns": [
+                    { data: 'Id' },
+                    { data: 'Name' },
+                    { data: 'Account' },
+                    { data: 'RechargeIntegral' },
+                    { data: 'AddTime' },
+                    { data: 'Remark' }
+                ],
+                "columnDefs": [
+                    {
+                        "targets": -2,
+                        "data": null,
+                        "render": function (data) {
+                            var date = eval(data.replace(/\/Date\((\d+)\)\//gi, "new Date($1)"));
+                            return date.format("yyyy-mm-dd HH:MM:ss");
+                        }
+                    }]
+            });
+        }
+    </script>
+}
+

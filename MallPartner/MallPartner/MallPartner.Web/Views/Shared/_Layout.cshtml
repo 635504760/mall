@@ -1,0 +1,164 @@
+﻿@using StMallB.Web.Extensions
+@{
+    var currentJoinBusiness = (StMallB.Entity.JoinBusiness)ViewBag.CurrentJoinBusiness;
+    if (currentJoinBusiness == null)
+    {
+        currentJoinBusiness = new StMallB.Entity.JoinBusiness();
+    }
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>积分平台·@currentJoinBusiness.BusName 管理</title>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+
+    @Styles.Render("~/AdminLTE/plugins/font-awesome/css")
+    @Styles.Render("~/AdminLTE/plugins/ionicons/css")
+    @Styles.Render("~/AdminLTE/bootstrap/css")
+    @Styles.Render("~/AdminLTE/dist/css")
+    @Styles.Render("~/AdminLTE/dist/css/skins")
+
+    <style>
+        .modal-backdrop {
+            opacity: 0 !important;
+            filter: alpha(opacity=0) !important;
+        }
+    </style>
+
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+    <div class="wrapper">
+        <header class="main-header">
+            <a href="@Url.Action("Index", "Home")" class="logo">
+                <span class="logo-mini">管理</span>
+                <span class="logo-lg">@currentJoinBusiness.BusName 管理</span>
+            </a>
+            <nav class="navbar navbar-static-top" role="navigation">
+                @*<a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+                        <span class="sr-only">Toggle navigation</span>
+                    </a>*@
+            </nav>
+        </header>
+        <aside class="main-sidebar">
+            <section class="sidebar">
+                <div class="user-panel" style="height:75px;">
+                    <div class="pull-left image">
+                        <img src="~/AdminLTE/dist/img/user.svg" class="img-circle" alt="User Image">
+                    </div>
+                    <div class="pull-left info">
+                        @*<p>@currentJoinBusiness.BusName</p>*@
+                        <p>@currentJoinBusiness.BusAccount</p>
+                        <span style="line-height: 2;">积分余额：@currentJoinBusiness.BusIntegral</span>
+                    </div>
+                </div>
+                <ul class="sidebar-menu">
+                    <li class="header"> 用户</li>
+                    @*<li class="treeview">
+                        <a href="@Url.Action("Index", "Home")">
+                            <i class="fa fa-th"></i> <span>用户积分充值</span><i class="fa fa-angle-left pull-right"></i>
+                        </a>
+                        <ul class="treeview-menu">*@
+                    <li class="treeview" data-action=" memberintegralindex"><a href="@Url.Action("Index", "MemberIntegral")"><i class="fa fa-money"></i> 用户充值</a></li>
+                    <li class="treeview" data-action="MemberIntegralRecordList"><a href="@Url.Action("RecordList", "MemberIntegral")"><i class="fa fa-list"></i> 充值记录</a></li>
+                    @*</ul>
+                        </li>*@
+                    <li class="header"> 下级代理商</li>
+                    @*<li class="treeview">
+                        <a href="#">
+                                   <i class="fa fa-dashboard"></i> <span>下级代理商管理</span> <i class="fa fa-angle-left pull-right"></i>
+                               </a>
+                               <ul class="treeview-menu">*@
+                    <li class="treeview" data-action="JoinBusinessAddSubJoinBusiness"><a href="@Url.Action("AddSubJoinBusiness", "JoinBusiness")"><i class="fa fa-user-plus"></i> 开通下级代理商</a></li>
+                    <li class="treeview" data-action="JoinBusinessList"><a href="@Url.Action("List", "JoinBusiness")"><i class="fa fa-table"></i> 下级代理商</a></li>
+                    <li class="treeview" data-action="JoinBusinessRecharge"><a href="@Url.Action("Recharge", "JoinBusiness")"><i class="fa fa-money"></i> 代理商积分充值</a></lidata-action>
+                    <li class="treeview" data-action="JoinBusinessSubJoinBusinessRechargeList"><a href="@Url.Action("SubJoinBusinessRechargeList", "JoinBusiness")"><i class="fa fa-list"></i> 充值记录</a></li>
+                    @*</ul>
+                        </li>*@
+                    <li class="header"> 账户管理</li>
+                    <li class="treeview">
+                        @*<a href="#">
+                                <i class="fa fa-circle-o text-red"></i> <span>账户管理</span><i class="fa fa-angle-left pull-right"></i>
+                            </a>
+                            <ul class="treeview-menu">*@
+                    <li class="treeview" data-action="BusRecordRecord"><a href="@Url.Action("Record", "BusRecord")"><i class="fa fa-list"></i> 充值记录</a></li>
+                    <li class="treeview" data-action="BusRecordChangePsw"><a href="@Url.Action("ChangePsw", "BusRecord")"><i class="fa fa-lock"></i> 密码修改</a></li>
+                    <li class="treeview"><a id="logoff" href="javascript:void(0)" onclick="LogOffSystem()"><i class="fa fa-sign-out"></i> 退出登录</a></li>
+                    @*</ul>
+                        </li>*@
+                </ul>
+            </section>
+        </aside>
+        <div class="content-wrapper">
+            <section class="content-header">
+                <h1>
+                    @ViewBag.Title
+                    <small>@ViewBag.SubTitle</small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><a href="#"><i class="fa fa-dashboard"></i>@ViewBag.SubTitle</a></li>
+                    <li class="active">@ViewBag.Title</li>
+                </ol>
+            </section>
+            <section class="content">
+                @RenderBody()
+            </section>
+        </div>
+        <footer class="main-footer">
+            <div class="pull-right hidden-xs">
+                <b>Version</b> 1.0
+            </div>
+            <strong>Copyrights |  &copy; 2017 .</strong> All rights
+            reserved.
+        </footer>
+        <div class="control-sidebar-bg"></div>
+    </div>
+
+    <div class="modal fade" id="smModal">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="lgModal" data-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+            </div>
+        </div>
+    </div>
+
+    <script src="~/AdminLTE/plugins/date.format.js"></script>
+    <script src="~/Scripts/Util/util.js"></script>
+    @Scripts.Render("~/AdminLTE/plugins/jquery/js")
+    @RenderSection("menu", required: false)
+    @Scripts.Render("~/AdminLTE/bootstrap/js")
+    @Scripts.Render("~/AdminLTE/plugins/slimscroll/js")
+    @Scripts.Render("~/AdminLTE/plugins/fastclick/js")
+    @Scripts.Render("~/Scripts/Shared/_Layout")
+    @Scripts.Render("~/AdminLTE/dist/js")
+    @RenderSection("scripts", required: false)
+
+    <script>
+        $(function () {
+            var controller = '@ViewContext.RouteData.Values["controller"]';
+            var action = '@ViewContext.RouteData.Values["action"]';
+            var menuItem = $('[data-action=' + controller + action + ']');
+            menuItem.addClass('active').parents('li').addClass('active');
+
+            $('.modal').on('hidden.bs.modal', function () {
+                $(this).removeData("bs.modal");
+            });
+        });
+    </script>
+    <script language="javascript" type="text/javascript">
+        function LogOffSystem() {
+            if (confirm("您确定要退出系统吗？"))
+                window.location = "@Url.Action("Login", "Account")";
+            return false;
+        }
+    </script>
+</body>
+</html>

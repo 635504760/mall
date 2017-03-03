@@ -1,0 +1,4 @@
+D:\Work\IntegralMall\MallPartner\MallPartner\MallPartner.Entity\bin\Debug\StMallB.Entity.dll
+D:\Work\IntegralMall\MallPartner\MallPartner\MallPartner.Entity\bin\Debug\StMallB.Entity.pdb
+D:\Work\IntegralMall\MallPartner\MallPartner\MallPartner.Entity\obj\Debug\StMallB.Entity.dll
+D:\Work\IntegralMall\MallPartner\MallPartner\MallPartner.Entity\obj\Debug\StMallB.Entity.pdb

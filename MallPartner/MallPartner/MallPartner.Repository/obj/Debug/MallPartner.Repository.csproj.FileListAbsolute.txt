@@ -1,0 +1,11 @@
+D:\Work\IntegralMall\MallPartner\MallPartner\MallPartner.Repository\bin\Debug\StMallB.Repository.dll
+D:\Work\IntegralMall\MallPartner\MallPartner\MallPartner.Repository\bin\Debug\StMallB.Repository.pdb
+D:\Work\IntegralMall\MallPartner\MallPartner\MallPartner.Repository\bin\Debug\Dapper.dll
+D:\Work\IntegralMall\MallPartner\MallPartner\MallPartner.Repository\bin\Debug\DapperExtensions.dll
+D:\Work\IntegralMall\MallPartner\MallPartner\MallPartner.Repository\bin\Debug\StMallB.Entity.dll
+D:\Work\IntegralMall\MallPartner\MallPartner\MallPartner.Repository\bin\Debug\StMallB.Entity.pdb
+D:\Work\IntegralMall\MallPartner\MallPartner\MallPartner.Repository\bin\Debug\Dapper.xml
+D:\Work\IntegralMall\MallPartner\MallPartner\MallPartner.Repository\bin\Debug\DapperExtensions.pdb
+D:\Work\IntegralMall\MallPartner\MallPartner\MallPartner.Repository\obj\Debug\MallPartner.Repository.csprojResolveAssemblyReference.cache
+D:\Work\IntegralMall\MallPartner\MallPartner\MallPartner.Repository\obj\Debug\StMallB.Repository.dll
+D:\Work\IntegralMall\MallPartner\MallPartner\MallPartner.Repository\obj\Debug\StMallB.Repository.pdb

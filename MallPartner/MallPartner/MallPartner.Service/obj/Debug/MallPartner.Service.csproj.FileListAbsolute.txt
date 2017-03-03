@@ -1,0 +1,17 @@
+D:\Work\IntegralMall\MallPartner\MallPartner\MallPartner.Service\bin\Debug\StMallB.Service.dll
+D:\Work\IntegralMall\MallPartner\MallPartner\MallPartner.Service\bin\Debug\StMallB.Service.pdb
+D:\Work\IntegralMall\MallPartner\MallPartner\MallPartner.Service\bin\Debug\MallPartner.DataObject.dll
+D:\Work\IntegralMall\MallPartner\MallPartner\MallPartner.Service\bin\Debug\StMallB.Common.dll
+D:\Work\IntegralMall\MallPartner\MallPartner\MallPartner.Service\bin\Debug\StMallB.Entity.dll
+D:\Work\IntegralMall\MallPartner\MallPartner\MallPartner.Service\bin\Debug\StMallB.Repository.dll
+D:\Work\IntegralMall\MallPartner\MallPartner\MallPartner.Service\bin\Debug\DapperExtensions.dll
+D:\Work\IntegralMall\MallPartner\MallPartner\MallPartner.Service\bin\Debug\Dapper.dll
+D:\Work\IntegralMall\MallPartner\MallPartner\MallPartner.Service\bin\Debug\StMallB.Common.pdb
+D:\Work\IntegralMall\MallPartner\MallPartner\MallPartner.Service\bin\Debug\MallPartner.DataObject.pdb
+D:\Work\IntegralMall\MallPartner\MallPartner\MallPartner.Service\bin\Debug\StMallB.Entity.pdb
+D:\Work\IntegralMall\MallPartner\MallPartner\MallPartner.Service\bin\Debug\StMallB.Repository.pdb
+D:\Work\IntegralMall\MallPartner\MallPartner\MallPartner.Service\bin\Debug\DapperExtensions.pdb
+D:\Work\IntegralMall\MallPartner\MallPartner\MallPartner.Service\bin\Debug\Dapper.xml
+D:\Work\IntegralMall\MallPartner\MallPartner\MallPartner.Service\obj\Debug\MallPartner.Service.csprojResolveAssemblyReference.cache
+D:\Work\IntegralMall\MallPartner\MallPartner\MallPartner.Service\obj\Debug\StMallB.Service.dll
+D:\Work\IntegralMall\MallPartner\MallPartner\MallPartner.Service\obj\Debug\StMallB.Service.pdb

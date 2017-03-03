@@ -1,0 +1,4 @@
+D:\Work\IntegralMall\MallPartner\MallPartner\MallPartner.DataObject\bin\Debug\MallPartner.DataObject.dll
+D:\Work\IntegralMall\MallPartner\MallPartner\MallPartner.DataObject\bin\Debug\MallPartner.DataObject.pdb
+D:\Work\IntegralMall\MallPartner\MallPartner\MallPartner.DataObject\obj\Debug\MallPartner.DataObject.dll
+D:\Work\IntegralMall\MallPartner\MallPartner\MallPartner.DataObject\obj\Debug\MallPartner.DataObject.pdb
